@@ -1,0 +1,56 @@
+using EduApoyos.Infrastructure.Identity;
+using EduApoyos.Infrastructure.Persistence;
+using EduApoyos.Infrastructure.Persistence.Interceptors;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace EduApoyos.Infrastructure;
+
+public static class DependencyInjection
+{
+    private const string DefaultConnectionName = "DefaultConnection";
+
+    public static IServiceCollection AddInfrastructure(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        var connectionString = configuration.GetConnectionString(DefaultConnectionName)
+            ?? throw new InvalidOperationException(
+                $"Connection string '{DefaultConnectionName}' is not configured.");
+
+        services.AddSingleton<UtcDateTimeSaveChangesInterceptor>();
+
+        services.AddDbContext<ApplicationDbContext>((sp, options) =>
+        {
+            options.UseSqlServer(
+                connectionString,
+                sqlOptions =>
+                {
+                    sqlOptions.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
+                    sqlOptions.EnableRetryOnFailure(
+                        maxRetryCount: 5,
+                        maxRetryDelay: TimeSpan.FromSeconds(10),
+                        errorNumbersToAdd: null);
+                });
+
+            options.AddInterceptors(sp.GetRequiredService<UtcDateTimeSaveChangesInterceptor>());
+        });
+
+        services
+            .AddIdentityCore<ApplicationUser>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequiredLength = 8;
+            })
+            .AddRoles<ApplicationRole>()
+            .AddEntityFrameworkStores<ApplicationDbContext>();
+
+        return services;
+    }
+}
