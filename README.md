@@ -65,4 +65,53 @@ Si se cambia la contraseña en el `.env`, actualizar también esta cadena (o sob
 dotnet run --project src/EduApoyos.Api
 ```
 
-Swagger estará disponible en `https://localhost:{puerto}/swagger`.
+Swagger estará disponible en `https://localhost:7260/swagger`.
+
+## Frontend Angular
+
+El cliente Angular 20 vive en la carpeta `client/`.
+
+### Requisitos
+
+- [Node.js 20+](https://nodejs.org/)
+- npm 10+
+
+### Instalación
+
+```bash
+cd client
+npm install
+```
+
+### Ejecución en desarrollo
+
+```bash
+npm start
+```
+
+El servidor se levanta en `http://localhost:4200` y proxeas las llamadas `/api/*` a la API en `https://localhost:7260` mediante `client/proxy.conf.json`. Asegurarse de tener la API corriendo antes de iniciar el frontend.
+
+### Build de producción
+
+```bash
+npm run build:prod
+```
+
+### Estructura
+
+```
+client/src/app/
+├── core/           # Auth, guards, interceptors, services, models, constants
+├── shared/         # Reusable components, pipes, utilities
+├── features/       # Vertical slices (auth, dashboard, students, support-requests)
+└── layout/         # Main layout, sidebar, 404
+```
+
+Reglas aplicadas:
+
+- Standalone components + Signals
+- Angular Material 20
+- Functional guards (`authGuard`, `guestGuard`)
+- Functional HTTP interceptors (`authInterceptor`, `loadingInterceptor`, `errorInterceptor`)
+- Lazy-loaded routes
+- Sin NgModules, sin NgRx
