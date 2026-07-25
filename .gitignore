@@ -65,20 +65,18 @@ TestResults/
 # =========================
 # Angular / Node
 # =========================
-/dist/
-/out-tsc/
-/tmp/
-/coverage/
-/e2e/test-output/
-/.angular/
-.angular/
+**/dist/
+**/out-tsc/
+**/tmp/
+**/coverage/
+**/e2e/test-output/
+**/.angular/
 
-/node_modules/
-/package-lock.json
-/yarn.lock
+**/node_modules/
+**/yarn.lock
 
-/.angular-cli.json
-/.ng/
+**/.angular-cli.json
+**/.ng/
 
 *.tsbuildinfo
 
