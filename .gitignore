@@ -1,4 +1,70 @@
-# Angular specific
+# =========================
+# .NET
+# =========================
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio / Rider / VS Code
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# Rider
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# Build results
+*.pdb
+*.dll.config
+*.exe.config
+*.cache
+*.log
+*.tlog
+*.tmp
+*.psess
+*.vsp
+*.vspx
+*.sap
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# EF Core
+*.mdf
+*.ldf
+
+# Test results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.coverage
+*.coveragexml
+coverage/
+TestResults/
+
+# ASP.NET user secrets
+**/appsettings.*.local.json
+
+# =========================
+# Angular / Node
+# =========================
 /dist/
 /out-tsc/
 /tmp/
@@ -7,22 +73,20 @@
 /.angular/
 .angular/
 
-# Node modules and dependency files
 /node_modules/
 /package-lock.json
 /yarn.lock
 
-# Environment files
 /.env
 
-# Angular CLI and build artefacts
 /.angular-cli.json
 /.ng/
 
-# TypeScript cache
 *.tsbuildinfo
 
-# Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Cursor
+.cursor/
