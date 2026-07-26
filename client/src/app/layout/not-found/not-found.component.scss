@@ -1,0 +1,26 @@
+.app-not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 60vh;
+  text-align: center;
+
+  &__icon {
+    font-size: 72px;
+    height: 72px;
+    width: 72px;
+    color: var(--mat-sys-primary);
+  }
+
+  &__title {
+    font-size: 3rem;
+    margin: 0;
+  }
+
+  &__subtitle {
+    color: var(--mat-sys-on-surface-variant);
+    margin: 0 0 16px;
+  }
+}
