@@ -13,13 +13,27 @@
       <button
         type="button"
         mat-icon-button
-        aria-label="Toggle navigation"
+        aria-label="Alternar navegación"
         (click)="toggleSidenav()"
       >
         <mat-icon>menu</mat-icon>
       </button>
       <span class="app-layout__title">{{ appName }}</span>
       <span class="app-layout__spacer"></span>
+
+      @if (userName()) {
+        <span class="app-layout__user">{{ userName() }}</span>
+      }
+      <button
+        type="button"
+        mat-stroked-button
+        class="app-layout__logout"
+        aria-label="Cerrar sesión"
+        (click)="logout()"
+      >
+        <mat-icon>logout</mat-icon>
+        <span>Cerrar sesión</span>
+      </button>
     </mat-toolbar>
 
     <main class="app-layout__main">
