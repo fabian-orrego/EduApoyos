@@ -1,4 +1,4 @@
-.app-login {
+.app-register {
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -12,17 +12,22 @@
 
   &__card {
     width: 100%;
-    max-width: 420px;
+    max-width: 460px;
   }
 
   &__form {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
     padding-top: 12px;
+
+    // Reserve space for the subscript (hints/errors) so consecutive fields never overlap.
+    mat-form-field {
+      display: block;
+    }
   }
 
-  &__register-hint {
+  &__login-hint {
     margin: 8px 0 0;
     text-align: center;
     font-size: 0.9rem;

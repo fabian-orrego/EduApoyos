@@ -4,7 +4,13 @@ import { Observable, tap } from 'rxjs';
 
 import { API_ROUTES } from '../constants/api-routes';
 import { STORAGE_KEYS } from '../constants/storage-keys';
-import { AuthTokens, CurrentUser, LoginRequest } from '../models/auth.model';
+import {
+  AuthTokens,
+  CurrentUser,
+  LoginRequest,
+  RegisterRequest,
+  RegisterResponse,
+} from '../models/auth.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -23,6 +29,10 @@ export class AuthService {
     return this.http
       .post<AuthTokens>(API_ROUTES.auth.login, request)
       .pipe(tap((tokens) => this.storeTokens(tokens)));
+  }
+
+  register(request: RegisterRequest): Observable<RegisterResponse> {
+    return this.http.post<RegisterResponse>(API_ROUTES.auth.register, request);
   }
 
   logout(): void {
