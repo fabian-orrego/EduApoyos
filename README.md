@@ -59,13 +59,72 @@ Server=localhost,1433;Database=EduApoyos;User Id=sa;Password=EduApoyos!2026;Trus
 
 Si se cambia la contraseña en el `.env`, actualizar también esta cadena (o sobreescribirla mediante la variable de entorno `ConnectionStrings__DefaultConnection`).
 
+## Persistencia con EF Core (Code First)
+
+La capa `EduApoyos.Infrastructure` es la responsable del acceso a datos y aloja el
+`ApplicationDbContext`, las configuraciones fluidas de cada entidad, los interceptores y las
+migraciones. El proyecto se apega a las reglas RN-001 a RN-005:
+
+- **RN-001**: el modelo de dominio + `IEntityTypeConfiguration` son la única fuente de verdad del esquema.
+- **RN-002**: cualquier cambio estructural se realiza mediante migraciones EF Core (no scripts SQL manuales).
+- **RN-003**: todas las claves primarias son `Guid` y se generan en el dominio.
+- **RN-004**: el interceptor `UtcDateTimeSaveChangesInterceptor` normaliza todos los `DateTime` a UTC antes de persistir.
+- **RN-005**: las consultas de solo lectura deben usar `AsNoTracking()`.
+
+### Estructura de las migraciones
+
+Cada tabla tiene su propia migración para mantener el historial ordenado:
+
+| Orden | Migración | Contenido |
+|-------|-----------|-----------|
+| 1 | `InitialIdentity` | Tablas de ASP.NET Core Identity (`AspNetUsers`, `AspNetRoles`, `AspNetUserRoles`, `AspNetUserClaims`, `AspNetRoleClaims`, `AspNetUserLogins`, `AspNetUserTokens`) con columnas de negocio (`FullName`, `Role`, `RegisteredAt`). |
+| 2 | `AddStudents` | Tabla `Students` (FK a `AspNetUsers`, índice único por documento, `CHECK` sobre `Semester`). |
+| 3 | `AddSupportRequests` | Tabla `SupportRequests` (FK a `Students` y a `AspNetUsers`, índices por `Status`, `StudentId`, `AdvisorId`, `CHECK` sobre `RequestedAmount`). |
+| 4 | `AddStatusHistories` | Tabla `StatusHistories` (FK a `SupportRequests` y a `AspNetUsers`, índices por `SupportRequestId`, `ChangedByUserId` y compuesto por `SupportRequestId, ChangedAt`). |
+
+### Aplicar las migraciones
+
+En desarrollo, la API ejecuta `Database.MigrateAsync()` durante el arranque (ver
+`Api/Configuration/DatabaseStartupExtensions.cs`). No se debe habilitar la aplicación automática
+en producción; ahí se despliegan las migraciones manualmente con el CLI.
+
+Herramienta local ya restaurada (`.config/dotnet-tools.json`):
+
+```bash
+dotnet tool restore
+```
+
+Comandos habituales:
+
+```bash
+# Crear una nueva migración (una por cambio estructural, RN-002)
+dotnet ef migrations add <Nombre> \
+  --project src/EduApoyos.Infrastructure \
+  --startup-project src/EduApoyos.Api \
+  --output-dir Persistence/Migrations \
+  --context ApplicationDbContext
+
+# Aplicar todas las migraciones pendientes contra la base configurada en el entorno
+dotnet ef database update \
+  --project src/EduApoyos.Infrastructure \
+  --startup-project src/EduApoyos.Api \
+  --context ApplicationDbContext
+
+# Deshacer la última migración (solo antes de commitear)
+dotnet ef migrations remove \
+  --project src/EduApoyos.Infrastructure \
+  --startup-project src/EduApoyos.Api \
+  --context ApplicationDbContext
+```
+
 ## Ejecutar la API
 
 ```bash
 dotnet run --project src/EduApoyos.Api
 ```
 
-Swagger estará disponible en `https://localhost:7260/swagger`.
+Al iniciar en `Development` se aplican automáticamente las migraciones pendientes contra el SQL
+Server configurado. Swagger estará disponible en `https://localhost:7260/swagger`.
 
 ## Frontend Angular
 
