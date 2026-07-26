@@ -93,6 +93,26 @@ internal sealed class IdentityService : IIdentityService
         return Result.Success(summary);
     }
 
+    public async Task<UserSummary?> FindByEmailAsync(
+        string email,
+        CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var user = await _userManager.FindByEmailAsync(email).ConfigureAwait(false);
+        if (user is null)
+        {
+            return null;
+        }
+
+        return new UserSummary(
+            user.Id,
+            user.Email!,
+            user.FullName,
+            user.Role,
+            user.RegisteredAt);
+    }
+
     public async Task<Result<UserSummary>> ValidateCredentialsAsync(
         string email,
         string password,

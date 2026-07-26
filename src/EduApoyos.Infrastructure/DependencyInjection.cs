@@ -1,8 +1,10 @@
 using EduApoyos.Application.Common.Identity;
+using EduApoyos.Application.Common.Persistence;
 using EduApoyos.Infrastructure.Authentication;
 using EduApoyos.Infrastructure.Identity;
 using EduApoyos.Infrastructure.Persistence;
 using EduApoyos.Infrastructure.Persistence.Interceptors;
+using EduApoyos.Infrastructure.Persistence.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -54,6 +56,7 @@ public static class DependencyInjection
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
         services.AddScoped<IIdentityService, IdentityService>();
+        services.AddScoped<IStudentRepository, StudentRepository>();
 
         services
             .AddOptions<JwtSettings>()
