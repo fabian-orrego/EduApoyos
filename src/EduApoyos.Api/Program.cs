@@ -11,6 +11,7 @@ builder.Services.AddSwaggerConfiguration();
 builder.Services.AddClientCors(builder.Configuration);
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddJwtAuthentication(builder.Configuration);
 
 // The exception-handling middleware is the single source of truth for validation errors,
 // so the built-in [ApiController] auto-400 must be turned off (RN: ProblemDetails everywhere).
@@ -31,6 +32,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors(ClientCorsExtensions.ClientPolicyName);
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 

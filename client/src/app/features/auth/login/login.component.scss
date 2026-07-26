@@ -27,4 +27,13 @@
     text-align: center;
     font-size: 0.9rem;
   }
+
+  &__form-error {
+    margin: 0;
+    padding: 8px 12px;
+    border-radius: 4px;
+    background-color: var(--mat-sys-error-container);
+    color: var(--mat-sys-on-error-container);
+    font-size: 0.9rem;
+  }
 }

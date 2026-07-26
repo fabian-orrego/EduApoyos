@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -7,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
+import { ROLE_HOME_ROUTES } from '../../../core/models/auth.model';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
 
@@ -37,7 +39,7 @@ export class LoginComponent {
 
   protected readonly form = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]],
+    password: ['', [Validators.required]],
   });
 
   submit(): void {
@@ -48,12 +50,22 @@ export class LoginComponent {
 
     this.submitting.set(true);
     this.auth.login(this.form.getRawValue()).subscribe({
-      next: () => {
-        const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/';
-        this.notifier.success('Welcome back!');
-        this.router.navigateByUrl(returnUrl);
+      next: (response) => {
+        this.notifier.success(`¡Bienvenido, ${response.fullName}!`);
+        const target =
+          this.route.snapshot.queryParamMap.get('returnUrl') ??
+          ROLE_HOME_ROUTES[response.roleId] ??
+          '/';
+        this.router.navigateByUrl(target);
       },
-      error: () => this.submitting.set(false),
+      error: (error: HttpErrorResponse) => {
+        this.submitting.set(false);
+        // RN-004: never disclose whether the email or the password was wrong. Any 401 becomes
+        // the same generic error on the form.
+        if (error.status === 401) {
+          this.form.setErrors({ invalidCredentials: true });
+        }
+      },
       complete: () => this.submitting.set(false),
     });
   }
