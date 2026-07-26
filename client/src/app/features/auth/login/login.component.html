@@ -54,8 +54,13 @@
           color="primary"
           [disabled]="submitting()"
         >
-          {{ submitting() ? 'Ingresanso...' : 'Ingresar' }}
+          {{ submitting() ? 'Ingresando...' : 'Ingresar' }}
         </button>
+
+        <p class="app-login__register-hint">
+          ¿Aún no tienes cuenta?
+          <a routerLink="/register">Regístrate</a>
+        </p>
       </form>
     </mat-card-content>
   </mat-card>

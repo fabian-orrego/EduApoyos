@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  apiBaseUrl: '/api',
+  apiBaseUrl: 'https://localhost:7260/api',
   appName: 'EduApoyos',
 };

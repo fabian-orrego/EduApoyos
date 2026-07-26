@@ -28,6 +28,7 @@ internal static class SwaggerServiceCollectionExtensions
 
             options.CustomSchemaIds(type => type.FullName?.Replace('+', '.'));
             options.SupportNonNullableReferenceTypes();
+            options.UseAllOfToExtendReferenceSchemas();
 
             IncludeXmlComments(options);
             AddJwtBearerSecurity(options);

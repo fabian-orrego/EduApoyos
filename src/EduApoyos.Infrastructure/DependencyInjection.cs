@@ -1,3 +1,4 @@
+using EduApoyos.Application.Common.Identity;
 using EduApoyos.Infrastructure.Identity;
 using EduApoyos.Infrastructure.Persistence;
 using EduApoyos.Infrastructure.Persistence.Interceptors;
@@ -50,6 +51,8 @@ public static class DependencyInjection
             })
             .AddRoles<ApplicationRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
+
+        services.AddScoped<IIdentityService, IdentityService>();
 
         return services;
     }
