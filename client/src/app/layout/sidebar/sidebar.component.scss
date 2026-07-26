@@ -1,0 +1,9 @@
+.app-sidebar {
+  display: block;
+  padding-top: 8px;
+
+  a.active {
+    background-color: var(--mat-sys-secondary-container);
+    color: var(--mat-sys-on-secondary-container);
+  }
+}
