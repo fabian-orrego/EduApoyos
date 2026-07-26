@@ -1,0 +1,16 @@
+.app-data-table {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  table {
+    width: 100%;
+  }
+
+  .app-empty-row td {
+    text-align: center;
+    padding: 24px 16px;
+    color: var(--mat-sys-on-surface-variant);
+  }
+}

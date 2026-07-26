@@ -1,0 +1,42 @@
+<div class="app-data-table">
+  <table mat-table [dataSource]="rows()" class="mat-elevation-z1">
+    @for (column of columns(); track column.key) {
+      <ng-container [matColumnDef]="column.key">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          [style.text-align]="column.align ?? 'start'"
+        >
+          {{ column.header }}
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let row"
+          [style.text-align]="column.align ?? 'start'"
+        >
+          {{ column.value(row) }}
+        </td>
+      </ng-container>
+    }
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns()"></tr>
+
+    <tr class="mat-row app-empty-row" *matNoDataRow>
+      <td class="mat-cell" [attr.colspan]="displayedColumns().length">
+        No records found.
+      </td>
+    </tr>
+  </table>
+
+  @if (showPaginator()) {
+    <mat-paginator
+      [length]="totalItems()"
+      [pageIndex]="pageIndex()"
+      [pageSize]="pageSize()"
+      [pageSizeOptions]="pageSizeOptions()"
+      (page)="onPage($event)"
+      showFirstLastButtons
+    />
+  }
+</div>
