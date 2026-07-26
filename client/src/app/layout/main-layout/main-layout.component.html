@@ -1,0 +1,29 @@
+<mat-sidenav-container class="app-layout" autosize>
+  <mat-sidenav
+    #sidenav
+    class="app-layout__sidenav"
+    mode="side"
+    [opened]="sidenavOpened()"
+  >
+    <app-sidebar />
+  </mat-sidenav>
+
+  <mat-sidenav-content class="app-layout__content">
+    <mat-toolbar color="primary" class="app-layout__toolbar">
+      <button
+        type="button"
+        mat-icon-button
+        aria-label="Toggle navigation"
+        (click)="toggleSidenav()"
+      >
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span class="app-layout__title">{{ appName }}</span>
+      <span class="app-layout__spacer"></span>
+    </mat-toolbar>
+
+    <main class="app-layout__main">
+      <router-outlet />
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>
