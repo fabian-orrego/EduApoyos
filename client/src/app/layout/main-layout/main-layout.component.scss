@@ -1,0 +1,30 @@
+.app-layout {
+  height: 100vh;
+
+  &__sidenav {
+    width: 260px;
+    border-right: 1px solid var(--mat-sys-outline-variant);
+  }
+
+  &__toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  &__title {
+    margin-left: 8px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+  }
+
+  &__spacer {
+    flex: 1 1 auto;
+  }
+
+  &__main {
+    padding: 24px;
+    min-height: calc(100vh - 64px);
+    box-sizing: border-box;
+  }
+}
