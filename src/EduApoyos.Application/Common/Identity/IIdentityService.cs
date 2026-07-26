@@ -23,4 +23,17 @@ public interface IIdentityService
         string password,
         UserRole role,
         CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Validates the supplied credentials against ASP.NET Core Identity.
+    /// </summary>
+    /// <remarks>
+    /// Per US-005 RN-004 the caller must not be able to tell whether the email or the password
+    /// was wrong, therefore every failure path returns the same generic
+    /// <see cref="ErrorType.Unauthorized"/> error.
+    /// </remarks>
+    Task<Result<UserSummary>> ValidateCredentialsAsync(
+        string email,
+        string password,
+        CancellationToken cancellationToken);
 }

@@ -1,4 +1,5 @@
 using EduApoyos.Application.Common.Identity;
+using EduApoyos.Infrastructure.Authentication;
 using EduApoyos.Infrastructure.Identity;
 using EduApoyos.Infrastructure.Persistence;
 using EduApoyos.Infrastructure.Persistence.Interceptors;
@@ -53,6 +54,25 @@ public static class DependencyInjection
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
         services.AddScoped<IIdentityService, IdentityService>();
+
+        services
+            .AddOptions<JwtSettings>()
+            .Bind(configuration.GetSection(JwtSettings.SectionName))
+            .Validate(
+                s => !string.IsNullOrWhiteSpace(s.SecretKey),
+                "The 'Jwt:SecretKey' setting must be configured.")
+            .Validate(
+                s => !string.IsNullOrWhiteSpace(s.Issuer),
+                "The 'Jwt:Issuer' setting must be configured.")
+            .Validate(
+                s => !string.IsNullOrWhiteSpace(s.Audience),
+                "The 'Jwt:Audience' setting must be configured.")
+            .Validate(
+                s => s.AccessTokenExpirationMinutes > 0,
+                "The 'Jwt:AccessTokenExpirationMinutes' setting must be positive.")
+            .ValidateOnStart();
+
+        services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
 
         return services;
     }

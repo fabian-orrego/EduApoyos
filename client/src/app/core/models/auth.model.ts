@@ -15,22 +15,38 @@ export const USER_ROLE_OPTIONS: readonly RoleOption[] = [
   { id: UserRoleId.Student, label: 'Estudiante' },
 ] as const;
 
+export const ROLE_LABELS: Readonly<Record<UserRoleIdValue, string>> = {
+  [UserRoleId.Advisor]: 'Asesor',
+  [UserRoleId.Student]: 'Estudiante',
+};
+
+/**
+ * Home route associated to each role. Used by the login flow to redirect the user right after
+ * authentication (US-005). Both roles land on the dashboard for now, but the mapping is kept
+ * explicit so future routes can be added without touching the login component.
+ */
+export const ROLE_HOME_ROUTES: Readonly<Record<UserRoleIdValue, string>> = {
+  [UserRoleId.Advisor]: '/dashboard',
+  [UserRoleId.Student]: '/dashboard',
+};
+
 export interface LoginRequest {
   email: string;
   password: string;
 }
 
-export interface AuthTokens {
-  accessToken: string;
-  refreshToken: string;
+/** Response shape returned by <c>POST /api/auth/login</c> (US-005). */
+export interface LoginResponse {
+  token: string;
   expiresAt: string;
+  fullName: string;
+  roleId: UserRoleIdValue;
 }
 
 export interface CurrentUser {
-  id: string;
-  email: string;
   fullName: string;
-  roles: string[];
+  roleId: UserRoleIdValue;
+  expiresAt: string;
 }
 
 export interface RegisterRequest {

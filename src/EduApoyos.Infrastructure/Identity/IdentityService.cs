@@ -15,6 +15,11 @@ namespace EduApoyos.Infrastructure.Identity;
 /// </summary>
 internal sealed class IdentityService : IIdentityService
 {
+    // Shared generic error so we cannot leak whether the email or the password was invalid.
+    private static readonly Error InvalidCredentialsError = Error.Unauthorized(
+        "auth.credentials.invalid",
+        "Credenciales inválidas.");
+
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ILogger<IdentityService> _logger;
 
@@ -76,6 +81,38 @@ internal sealed class IdentityService : IIdentityService
             // Roll back the user so the operation stays atomic from the caller's point of view.
             await _userManager.DeleteAsync(user).ConfigureAwait(false);
             return MapIdentityFailure(addRoleResult);
+        }
+
+        var summary = new UserSummary(
+            user.Id,
+            user.Email!,
+            user.FullName,
+            user.Role,
+            user.RegisteredAt);
+
+        return Result.Success(summary);
+    }
+
+    public async Task<Result<UserSummary>> ValidateCredentialsAsync(
+        string email,
+        string password,
+        CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var user = await _userManager.FindByEmailAsync(email).ConfigureAwait(false);
+        if (user is null)
+        {
+            // RN-004: keep the failure reason opaque; only log the outcome for diagnostics.
+            _logger.LogInformation("Login attempt for unknown email {Email}.", email);
+            return Result.Failure<UserSummary>(InvalidCredentialsError);
+        }
+
+        var passwordValid = await _userManager.CheckPasswordAsync(user, password).ConfigureAwait(false);
+        if (!passwordValid)
+        {
+            _logger.LogInformation("Login attempt with wrong password for user {UserId}.", user.Id);
+            return Result.Failure<UserSummary>(InvalidCredentialsError);
         }
 
         var summary = new UserSummary(

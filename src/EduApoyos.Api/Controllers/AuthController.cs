@@ -1,4 +1,5 @@
 using EduApoyos.Api.Configuration;
+using EduApoyos.Application.Features.Auth.Login;
 using EduApoyos.Application.Features.Auth.Register;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -50,5 +51,33 @@ public sealed class AuthController : ControllerBase
         // the created resource in the body but no Location header. CreatedAtAction cannot be used
         // here because it would fail to resolve a route for the target action.
         return StatusCode(StatusCodes.Status201Created, result.Value);
+    }
+
+    /// <summary>
+    /// Authenticates a user and returns a signed JWT (US-005). Public endpoint.
+    /// </summary>
+    /// <param name="request">The login payload.</param>
+    /// <param name="cancellationToken">Request cancellation token.</param>
+    /// <response code="200">The credentials are valid and a token has been issued.</response>
+    /// <response code="400">The request body is invalid.</response>
+    /// <response code="401">The credentials are invalid.</response>
+    [AllowAnonymous]
+    [HttpPost("login")]
+    [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> LoginAsync(
+        [FromBody] LoginRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = request.ToCommand();
+        var result = await _sender.Send(command, cancellationToken).ConfigureAwait(false);
+
+        if (result.IsFailure)
+        {
+            return result.Error.ToProblem(HttpContext);
+        }
+
+        return Ok(result.Value);
     }
 }

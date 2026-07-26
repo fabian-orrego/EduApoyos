@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\EduApoyos.Application\EduApoyos.Application.csproj" />
     <ProjectReference Include="..\..\src\EduApoyos.Domain\EduApoyos.Domain.csproj" />
+    <ProjectReference Include="..\..\src\EduApoyos.Infrastructure\EduApoyos.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
