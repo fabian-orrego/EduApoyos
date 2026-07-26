@@ -8,8 +8,8 @@ export const API_ROUTES = {
     register: `${base}/auth/register`,
   },
   students: {
-    root: `${base}/students`,
-    byId: (id: string | number) => `${base}/students/${id}`,
+    root: `${base}/estudiantes`,
+    byId: (id: string | number) => `${base}/estudiantes/${id}`,
   },
   supportRequests: {
     root: `${base}/support-requests`,

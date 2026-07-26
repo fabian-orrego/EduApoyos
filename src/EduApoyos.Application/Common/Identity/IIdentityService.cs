@@ -36,4 +36,10 @@ public interface IIdentityService
         string email,
         string password,
         CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Looks up an Identity user by email. Returns <c>null</c> when the user does not exist so
+    /// callers can decide whether the miss is a not-found or a validation error.
+    /// </summary>
+    Task<UserSummary?> FindByEmailAsync(string email, CancellationToken cancellationToken);
 }

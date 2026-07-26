@@ -2,6 +2,8 @@ import { Routes } from '@angular/router';
 
 import { authGuard } from './core/guards/auth.guard';
 import { guestGuard } from './core/guards/guest.guard';
+import { roleGuard } from './core/guards/role.guard';
+import { UserRoleId } from './core/models/auth.model';
 
 export const routes: Routes = [
   {
@@ -33,6 +35,19 @@ export const routes: Routes = [
           import('./features/dashboard/dashboard.component').then(
             (m) => m.DashboardComponent,
           ),
+      },
+      {
+        path: 'estudiantes/nuevo',
+        canActivate: [roleGuard([UserRoleId.Advisor])],
+        loadComponent: () =>
+          import(
+            './features/students/create-student/create-student.component'
+          ).then((m) => m.CreateStudentComponent),
+      },
+      {
+        path: 'estudiantes',
+        pathMatch: 'full',
+        redirectTo: 'estudiantes/nuevo',
       },
     ],
   },
