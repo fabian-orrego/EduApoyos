@@ -19,6 +19,19 @@ La capa `EduApoyos.Infrastructure` aloja el `ApplicationDbContext`, las configur
 | 3 | `AddSupportRequests` | Tabla `SupportRequests` |
 | 4 | `AddStatusHistories` | Tabla `StatusHistories` |
 | 5 | `ReseedIdentityRoles` | Roles `Advisor` / `Student` (seed determinístico) |
+| 6 | `AddSupportRequestsStatusUpdatedAtIndex` | Índice `(Status, UpdatedAt)` en `SupportRequests` |
+
+## Scripts SQL (`scripts/`)
+
+Consultas e índice entregables para análisis / operación sobre `SupportRequests`. Ejecutar contra la base `EduApoyos` (p. ej. Azure Data Studio, SSMS o `sqlcmd`).
+
+| Script | Propósito |
+|--------|-----------|
+| [`01_pending_stale_over_5_days.sql`](../scripts/01_pending_stale_over_5_days.sql) | Pendientes con más de 5 días sin actualización, por antigüedad |
+| [`02_count_by_status_and_type_last_month.sql`](../scripts/02_count_by_status_and_type_last_month.sql) | Conteos del último mes por estado y tipo de apoyo |
+| [`03_create_index_status_updatedat.sql`](../scripts/03_create_index_status_updatedat.sql) | Justificación y creación del índice no agrupado `(Status, UpdatedAt)` |
+
+> El índice del script 03 también está modelado en EF Core (`SupportRequestConfiguration`) y se aplica con la migración `AddSupportRequestsStatusUpdatedAtIndex` al arrancar la API.
 
 > Las migraciones intermedias `SeedIdentityRoles` / `RemoveIdentityRolesSeed` se eliminaron porque se anulaban mutuamente; el seed vigente de roles queda solo en `ReseedIdentityRoles`.
 

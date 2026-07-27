@@ -47,8 +47,10 @@ internal sealed class SupportRequestConfiguration : IEntityTypeConfiguration<Sup
         builder.HasIndex(sr => sr.StudentId)
             .HasDatabaseName("IX_SupportRequests_StudentId");
 
-        builder.HasIndex(sr => sr.Status)
-            .HasDatabaseName("IX_SupportRequests_Status");
+        // Composite index for aging Pending queries (Status + UpdatedAt range/order)
+        // and for Status-only filters (leading key). Replaces the former Status-only index.
+        builder.HasIndex(sr => new { sr.Status, sr.UpdatedAt })
+            .HasDatabaseName("IX_SupportRequests_Status_UpdatedAt");
 
         builder.HasIndex(sr => sr.AdvisorId)
             .HasDatabaseName("IX_SupportRequests_AdvisorId");
