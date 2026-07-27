@@ -1,0 +1,54 @@
+<section class="app-list-students">
+  <mat-card appearance="outlined" class="app-list-students__card">
+    <mat-card-header class="app-list-students__header">
+      <div>
+        <mat-card-title>Estudiantes</mat-card-title>
+        <mat-card-subtitle>
+          Consulta, edita y elimina la información académica registrada.
+        </mat-card-subtitle>
+      </div>
+      <a mat-flat-button color="primary" routerLink="/estudiantes/nuevo">
+        <mat-icon>person_add</mat-icon>
+        Registrar estudiante
+      </a>
+    </mat-card-header>
+
+    <mat-card-content>
+      <app-data-table
+        [columns]="columns()"
+        [rows]="items()"
+        [totalItems]="totalItems()"
+        [pageIndex]="pageIndex()"
+        [pageSize]="pageSize()"
+        [pageSizeOptions]="pageSizeOptions"
+        emptyMessage="No hay estudiantes registrados."
+        (pageChange)="onPageChange($event)"
+      />
+    </mat-card-content>
+  </mat-card>
+
+  <ng-template #actionsTpl let-row>
+    <div class="app-list-students__actions">
+      <button
+        mat-icon-button
+        type="button"
+        color="primary"
+        aria-label="Editar estudiante"
+        matTooltip="Editar"
+        (click)="openEdit(row)"
+      >
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button
+        mat-icon-button
+        type="button"
+        color="warn"
+        aria-label="Eliminar estudiante"
+        matTooltip="Eliminar"
+        (click)="confirmDelete(row)"
+      >
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </ng-template>
+</section>

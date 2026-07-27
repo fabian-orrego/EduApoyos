@@ -37,17 +37,21 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'estudiantes',
+        pathMatch: 'full',
+        canActivate: [roleGuard([UserRoleId.Advisor])],
+        loadComponent: () =>
+          import(
+            './features/students/list-students/list-students.component'
+          ).then((m) => m.ListStudentsComponent),
+      },
+      {
         path: 'estudiantes/nuevo',
         canActivate: [roleGuard([UserRoleId.Advisor])],
         loadComponent: () =>
           import(
             './features/students/create-student/create-student.component'
           ).then((m) => m.CreateStudentComponent),
-      },
-      {
-        path: 'estudiantes',
-        pathMatch: 'full',
-        redirectTo: 'estudiantes/nuevo',
       },
     ],
   },
