@@ -1,0 +1,88 @@
+<h2 mat-dialog-title>Cambiar estado</h2>
+
+<mat-dialog-content>
+  <p class="app-change-status__subtitle">
+    <strong>{{ data.studentFullName }}</strong>
+    <span>Estado actual: {{ statusLabels[data.status] }}</span>
+  </p>
+
+  @if (allowedStatuses.length === 0) {
+    <p class="app-change-status__empty">
+      La solicitud ya se encuentra en un estado final y no admite más
+      transiciones.
+    </p>
+  } @else {
+    <form
+      id="changeStatusForm"
+      [formGroup]="form"
+      (ngSubmit)="submit()"
+      class="app-change-status__form"
+    >
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Nuevo estado</mat-label>
+        <mat-select formControlName="newStatus">
+          @for (option of allowedStatuses; track option) {
+            <mat-option [value]="option">{{ statusLabels[option] }}</mat-option>
+          }
+        </mat-select>
+        @if (
+          form.controls.newStatus.touched &&
+          form.controls.newStatus.hasError('required')
+        ) {
+          <mat-error>Selecciona el nuevo estado.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>
+          Observación{{ notesRequired() ? ' (obligatoria)' : '' }}
+        </mat-label>
+        <textarea
+          matInput
+          rows="4"
+          formControlName="notes"
+          [maxlength]="notesMaxLength"
+        ></textarea>
+        @if (
+          form.controls.notes.touched && form.controls.notes.invalid
+        ) {
+          @if (form.controls.notes.hasError('required')) {
+            <mat-error>
+              La observación es obligatoria cuando se rechaza la solicitud.
+            </mat-error>
+          } @else if (form.controls.notes.hasError('maxlength')) {
+            <mat-error>
+              La observación no puede superar {{ notesMaxLength }} caracteres.
+            </mat-error>
+          }
+        } @else {
+          <mat-hint align="end">
+            {{ form.controls.notes.value.length }} / {{ notesMaxLength }}
+          </mat-hint>
+        }
+      </mat-form-field>
+    </form>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button
+    mat-stroked-button
+    type="button"
+    (click)="cancel()"
+    [disabled]="submitting()"
+  >
+    Cancelar
+  </button>
+  @if (allowedStatuses.length > 0) {
+    <button
+      type="submit"
+      form="changeStatusForm"
+      mat-flat-button
+      color="primary"
+      [disabled]="submitting()"
+    >
+      {{ submitting() ? 'Guardando...' : 'Actualizar estado' }}
+    </button>
+  }
+</mat-dialog-actions>
