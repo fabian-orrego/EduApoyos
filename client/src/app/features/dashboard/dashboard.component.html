@@ -1,30 +1,9 @@
 <section class="app-dashboard">
-  <header class="app-dashboard__header">
-    <h1>Dashboard</h1>
-    <p>Overview of EduApoyos activity.</p>
-  </header>
-
-  <div class="app-dashboard__grid">
-    <mat-card appearance="outlined">
-      <mat-card-header>
-        <mat-icon mat-card-avatar>group</mat-icon>
-        <mat-card-title>Students</mat-card-title>
-        <mat-card-subtitle>Manage students</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <p>Register and update student information.</p>
-      </mat-card-content>
-    </mat-card>
-
-    <mat-card appearance="outlined">
-      <mat-card-header>
-        <mat-icon mat-card-avatar>assignment</mat-icon>
-        <mat-card-title>Support Requests</mat-card-title>
-        <mat-card-subtitle>Track applications</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <p>Review, approve or reject financial support requests.</p>
-      </mat-card-content>
-    </mat-card>
-  </div>
+  <h1>
+    @if (userName()) {
+      Bienvenido, {{ userName() }}
+    } @else {
+      Bienvenido
+    }
+  </h1>
 </section>
