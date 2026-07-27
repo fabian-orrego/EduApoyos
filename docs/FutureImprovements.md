@@ -40,13 +40,13 @@ Administrar la infraestructura mediante Terraform.
 
 ## 4. Pipeline CI/CD completo
 
-Extender el pipeline para incluir SonarQube, análisis de cobertura, análisis de seguridad y publicación automática.
+Ya existe un pipeline CI del backend en GitHub Actions (restore, build Release, tests y publish) que corre exitosamente. Extenderlo para incluir frontend, SonarQube, cobertura, análisis de seguridad y despliegue automático (CD) hacia Azure.
 
 **Beneficios**
 
 - Mayor calidad.
-- Automatización.
-- Integración continua real.
+- Automatización end-to-end.
+- Despliegue continuo alineado con la [propuesta Azure](AzureDeploymentProposal.md).
 
 ---
 
