@@ -105,3 +105,17 @@ Detalle completo (20 estudiantes, solicitudes y borrado): [Demo data](docs/DemoD
 
 - Hot-reload / Visual Studio → [Local development](docs/LocalDevelopment.md)
 - Solo base de datos / migraciones → [Database](docs/Database.md)
+
+---
+
+## Cobertura de pruebas (backend)
+
+1. Abre una terminal.
+2. Navega a la raíz del repositorio (`EduApoyos.sln`).
+3. Ejecuta:
+
+```bash
+dotnet test EduApoyos.sln --collect:"XPlat Code Coverage" --results-directory ./coverage
+```
+
+El reporte queda en `coverage/<guid>/coverage.cobertura.xml`.
