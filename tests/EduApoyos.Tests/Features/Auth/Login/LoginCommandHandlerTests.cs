@@ -46,6 +46,7 @@ public sealed class LoginCommandHandlerTests
             accessToken.Token,
             accessToken.ExpiresAtUtc,
             user.FullName,
+            user.Email,
             (int)user.Role));
 
         _identityService.VerifyAll();

@@ -1,0 +1,99 @@
+<h2 mat-dialog-title>Editar solicitud</h2>
+
+<mat-dialog-content>
+  <p class="app-edit-support-request__subtitle">
+    <strong>{{ data.studentFullName }}</strong>
+    <span>{{ data.studentEmail }}</span>
+  </p>
+
+  <form
+    id="editSupportRequestForm"
+    [formGroup]="form"
+    (ngSubmit)="submit()"
+    class="app-edit-support-request__form"
+  >
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>Tipo de apoyo</mat-label>
+      <mat-select formControlName="supportType">
+        @for (option of supportTypeOptions; track option.id) {
+          <mat-option [value]="option.id">{{ option.label }}</mat-option>
+        }
+      </mat-select>
+      @if (
+        form.controls.supportType.touched &&
+        form.controls.supportType.hasError('required')
+      ) {
+        <mat-error>El tipo de apoyo es obligatorio.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>Monto solicitado</mat-label>
+      <input
+        matInput
+        type="number"
+        min="1"
+        step="1000"
+        formControlName="requestedAmount"
+      />
+      @if (
+        form.controls.requestedAmount.touched &&
+        form.controls.requestedAmount.invalid
+      ) {
+        @if (form.controls.requestedAmount.hasError('required')) {
+          <mat-error>El monto es obligatorio.</mat-error>
+        } @else if (form.controls.requestedAmount.hasError('min')) {
+          <mat-error>El monto debe ser mayor que cero.</mat-error>
+        }
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>Descripción</mat-label>
+      <textarea
+        matInput
+        rows="5"
+        formControlName="description"
+        [maxlength]="descriptionMaxLength"
+      ></textarea>
+      @if (
+        form.controls.description.touched &&
+        form.controls.description.invalid
+      ) {
+        @if (form.controls.description.hasError('required')) {
+          <mat-error>La descripción es obligatoria.</mat-error>
+        } @else if (form.controls.description.hasError('maxlength')) {
+          <mat-error>
+            La descripción no puede superar
+            {{ descriptionMaxLength }} caracteres.
+          </mat-error>
+        }
+      } @else {
+        <mat-hint align="end">
+          {{ form.controls.description.value.length }} /
+          {{ descriptionMaxLength }}
+        </mat-hint>
+      }
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button
+    mat-stroked-button
+    type="button"
+    (click)="cancel()"
+    [disabled]="submitting()"
+  >
+    Cancelar
+  </button>
+  <button
+    type="submit"
+    form="editSupportRequestForm"
+    mat-flat-button
+    color="primary"
+    [disabled]="submitting()"
+  >
+    {{ submitting() ? 'Guardando...' : 'Guardar cambios' }}
+  </button>
+</mat-dialog-actions>
