@@ -1,0 +1,27 @@
+.app-edit-student__subtitle {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0 0 16px;
+  color: var(--mat-sys-on-surface-variant);
+
+  strong {
+    color: var(--mat-sys-on-surface);
+    font-size: 1rem;
+  }
+
+  span {
+    font-size: 0.875rem;
+  }
+}
+
+.app-edit-student__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 360px;
+
+  mat-form-field {
+    display: block;
+  }
+}

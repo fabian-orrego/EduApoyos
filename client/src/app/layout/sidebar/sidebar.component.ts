@@ -26,9 +26,9 @@ export class SidebarComponent {
   private readonly allNavItems: readonly NavItem[] = [
     { label: 'Dashboard', icon: 'dashboard', path: '/dashboard' },
     {
-      label: 'Registrar estudiante',
-      icon: 'person_add',
-      path: '/estudiantes/nuevo',
+      label: 'Estudiantes',
+      icon: 'group',
+      path: '/estudiantes',
       allowedRoles: [UserRoleId.Advisor],
     },
     {

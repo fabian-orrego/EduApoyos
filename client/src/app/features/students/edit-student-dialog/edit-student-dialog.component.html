@@ -1,0 +1,107 @@
+<h2 mat-dialog-title>Editar estudiante</h2>
+
+<mat-dialog-content>
+  <p class="app-edit-student__subtitle">
+    <strong>{{ data.fullName }}</strong>
+    <span>{{ data.email }}</span>
+  </p>
+
+  <form
+    id="editStudentForm"
+    [formGroup]="form"
+    (ngSubmit)="submit()"
+    class="app-edit-student__form"
+  >
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>Tipo de documento</mat-label>
+      <mat-select formControlName="documentType">
+        @for (option of documentTypeOptions; track option.id) {
+          <mat-option [value]="option.id">{{ option.label }}</mat-option>
+        }
+      </mat-select>
+      @if (
+        form.controls.documentType.touched &&
+        form.controls.documentType.hasError('required')
+      ) {
+        <mat-error>El tipo de documento es obligatorio.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>Número de documento</mat-label>
+      <input
+        matInput
+        type="text"
+        autocomplete="off"
+        formControlName="documentNumber"
+        maxlength="20"
+      />
+      @if (
+        form.controls.documentNumber.touched &&
+        form.controls.documentNumber.invalid
+      ) {
+        @if (form.controls.documentNumber.hasError('required')) {
+          <mat-error>El número de documento es obligatorio.</mat-error>
+        } @else if (form.controls.documentNumber.hasError('maxlength')) {
+          <mat-error>
+            El número de documento no puede superar 20 caracteres.
+          </mat-error>
+        } @else if (form.controls.documentNumber.hasError('duplicated')) {
+          <mat-error>
+            El número de documento ya se encuentra registrado.
+          </mat-error>
+        }
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>Programa académico</mat-label>
+      <mat-select formControlName="academicProgram">
+        @for (program of programOptions; track program) {
+          <mat-option [value]="program">{{ program }}</mat-option>
+        }
+      </mat-select>
+      @if (
+        form.controls.academicProgram.touched &&
+        form.controls.academicProgram.hasError('required')
+      ) {
+        <mat-error>El programa académico es obligatorio.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>Semestre</mat-label>
+      <mat-select formControlName="semester">
+        @for (semester of semesterOptions; track semester) {
+          <mat-option [value]="semester">{{ semester }}</mat-option>
+        }
+      </mat-select>
+      @if (
+        form.controls.semester.touched &&
+        form.controls.semester.hasError('required')
+      ) {
+        <mat-error>El semestre es obligatorio.</mat-error>
+      }
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button
+    mat-stroked-button
+    type="button"
+    (click)="cancel()"
+    [disabled]="submitting()"
+  >
+    Cancelar
+  </button>
+  <button
+    type="submit"
+    form="editStudentForm"
+    mat-flat-button
+    color="primary"
+    [disabled]="submitting()"
+  >
+    {{ submitting() ? 'Guardando...' : 'Guardar cambios' }}
+  </button>
+</mat-dialog-actions>

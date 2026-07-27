@@ -91,7 +91,7 @@ export class CreateStudentComponent {
       .subscribe({
         next: () => {
           this.notifier.success('Estudiante registrado exitosamente.');
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/estudiantes']);
         },
         error: (error: HttpErrorResponse) => {
           this.submitting.set(false);
