@@ -77,6 +77,18 @@ internal sealed class StudentRepository : IStudentRepository
             .AsNoTracking()
             .AnyAsync(sr => sr.StudentId == studentId, cancellationToken);
 
+    public async Task<Guid?> GetIdByUserIdAsync(Guid userId, CancellationToken cancellationToken)
+    {
+        var id = await _dbContext.Students
+            .AsNoTracking()
+            .Where(s => s.UserId == userId)
+            .Select(s => (Guid?)s.Id)
+            .FirstOrDefaultAsync(cancellationToken)
+            .ConfigureAwait(false);
+
+        return id;
+    }
+
     public async Task<PagedResult<StudentListItem>> GetPagedAsync(
         int pageNumber,
         int pageSize,

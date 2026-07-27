@@ -1,0 +1,112 @@
+<section class="app-list-support-requests">
+  <mat-card appearance="outlined" class="app-list-support-requests__card">
+    <mat-card-header class="app-list-support-requests__header">
+      <div>
+        <mat-card-title>
+          {{ isStudent() ? 'Mis solicitudes' : 'Solicitudes de apoyo' }}
+        </mat-card-title>
+        <mat-card-subtitle>
+          @if (isStudent()) {
+            Consulta el estado de tus solicitudes y descarga la constancia.
+          } @else {
+            Consulta, filtra y da seguimiento a las solicitudes registradas.
+          }
+        </mat-card-subtitle>
+      </div>
+      <a mat-flat-button color="primary" routerLink="/solicitudes/nueva">
+        <mat-icon>note_add</mat-icon>
+        Nueva solicitud
+      </a>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="filtersForm" class="app-list-support-requests__filters">
+        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+          <mat-label>Estado</mat-label>
+          <mat-select formControlName="status">
+            <mat-option [value]="null">Todos</mat-option>
+            @for (option of statusOptions; track option.id) {
+              <mat-option [value]="option.id">{{ option.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+          <mat-label>Tipo de apoyo</mat-label>
+          <mat-select formControlName="supportType">
+            <mat-option [value]="null">Todos</mat-option>
+            @for (option of supportTypeOptions; track option.id) {
+              <mat-option [value]="option.id">{{ option.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+          <mat-label>Fecha inicial</mat-label>
+          <input matInput type="date" formControlName="fromDate" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+          <mat-label>Fecha final</mat-label>
+          <input matInput type="date" formControlName="toDate" />
+        </mat-form-field>
+
+        <div class="app-list-support-requests__filter-actions">
+          <button mat-stroked-button type="button" (click)="clearFilters()">
+            Limpiar filtros
+          </button>
+        </div>
+      </form>
+
+      <app-data-table
+        [columns]="columns()"
+        [rows]="items()"
+        [totalItems]="totalItems()"
+        [pageIndex]="pageIndex()"
+        [pageSize]="pageSize()"
+        [pageSizeOptions]="pageSizeOptions"
+        [emptyMessage]="
+          isStudent()
+            ? 'Aún no tienes solicitudes registradas.'
+            : 'No hay solicitudes registradas.'
+        "
+        (pageChange)="onPageChange($event)"
+      />
+    </mat-card-content>
+  </mat-card>
+
+  <ng-template #statusTpl let-row>
+    <span [class]="statusClass(row.status)">
+      {{ row.status | estado }}
+    </span>
+  </ng-template>
+
+  <ng-template #actionsTpl let-row>
+    <div class="app-list-support-requests__actions">
+      <button
+        mat-icon-button
+        type="button"
+        color="primary"
+        aria-label="Ver detalle"
+        matTooltip="Ver detalle"
+        (click)="openDetail(row)"
+      >
+        <mat-icon>visibility</mat-icon>
+      </button>
+
+      @if (isStudent()) {
+        <button
+          mat-icon-button
+          type="button"
+          color="primary"
+          aria-label="Descargar constancia"
+          matTooltip="Descargar constancia"
+          [disabled]="downloadingId() === row.id"
+          (click)="downloadCertificate(row)"
+        >
+          <mat-icon>picture_as_pdf</mat-icon>
+        </button>
+      }
+    </div>
+  </ng-template>
+</section>

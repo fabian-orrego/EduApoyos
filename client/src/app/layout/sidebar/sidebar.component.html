@@ -1,11 +1,10 @@
 <nav class="app-sidebar">
   <mat-nav-list>
-    @for (item of navItems(); track item.path) {
+    @for (item of navItems(); track item.label + item.path) {
       <a
         mat-list-item
         [routerLink]="item.path"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: false }"
+        [class.active]="isActive(item)"
       >
         <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
         <span matListItemTitle>{{ item.label }}</span>
