@@ -1,20 +1,20 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-export type EstadoSolicitud = 'Pending' | 'Approved' | 'Rejected' | 'Cancelled' | string;
+import {
+  SUPPORT_REQUEST_STATUS_LABELS,
+  SupportRequestStatusIdValue,
+} from '../../core/models/support-request.model';
 
-const LABELS: Record<string, string> = {
-  Pending: 'Pending',
-  Approved: 'Approved',
-  Rejected: 'Rejected',
-  Cancelled: 'Cancelled',
-};
-
+/**
+ * Translates a <c>SupportRequestStatus</c> numeric identifier (as emitted by the API) into
+ * its user-facing Spanish label (US-011 shared UX for the support requests module).
+ */
 @Pipe({ name: 'estado', standalone: true })
 export class EstadoPipe implements PipeTransform {
-  transform(value: EstadoSolicitud | null | undefined): string {
-    if (value == null) {
+  transform(value: SupportRequestStatusIdValue | null | undefined): string {
+    if (value === null || value === undefined) {
       return '';
     }
-    return LABELS[value] ?? String(value);
+    return SUPPORT_REQUEST_STATUS_LABELS[value] ?? String(value);
   }
 }

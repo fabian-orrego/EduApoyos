@@ -1,20 +1,20 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-export type TipoApoyo = 'Tuition' | 'Transport' | 'Meals' | 'Materials' | string;
+import {
+  SUPPORT_TYPE_LABELS,
+  SupportTypeIdValue,
+} from '../../core/models/support-request.model';
 
-const LABELS: Record<string, string> = {
-  Tuition: 'Tuition',
-  Transport: 'Transport',
-  Meals: 'Meals',
-  Materials: 'Materials',
-};
-
+/**
+ * Translates a <c>SupportType</c> numeric identifier (as emitted by the API) into its
+ * user-facing Spanish label.
+ */
 @Pipe({ name: 'tipoApoyo', standalone: true })
 export class TipoApoyoPipe implements PipeTransform {
-  transform(value: TipoApoyo | null | undefined): string {
-    if (value == null) {
+  transform(value: SupportTypeIdValue | null | undefined): string {
+    if (value === null || value === undefined) {
       return '';
     }
-    return LABELS[value] ?? String(value);
+    return SUPPORT_TYPE_LABELS[value] ?? String(value);
   }
 }

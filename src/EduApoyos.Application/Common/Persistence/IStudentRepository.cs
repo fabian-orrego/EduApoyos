@@ -73,4 +73,11 @@ public interface IStudentRepository
         int pageNumber,
         int pageSize,
         CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Returns the identifier of the student linked to the supplied Identity user, or
+    /// <c>null</c> when the user is not linked to any student yet. Used by the support
+    /// requests module to authorize student-owned resources (US-014, US-018).
+    /// </summary>
+    Task<Guid?> GetIdByUserIdAsync(Guid userId, CancellationToken cancellationToken);
 }
