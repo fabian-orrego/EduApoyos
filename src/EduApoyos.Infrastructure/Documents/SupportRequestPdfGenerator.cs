@@ -18,6 +18,13 @@ internal sealed class SupportRequestPdfGenerator : ISupportRequestPdfGenerator
 {
     private static readonly CultureInfo SpanishCulture = CultureInfo.GetCultureInfo("es-CO");
 
+    /// <summary>
+    /// Calibri is typically available on Windows developer machines; Linux containers ship
+    /// DejaVu (installed in the API Dockerfile) so PDF generation keeps working in Docker.
+    /// </summary>
+    private static string ResolveFontFamily() =>
+        OperatingSystem.IsWindows() ? Fonts.Calibri : "DejaVu Sans";
+
     public byte[] Generate(SupportRequestDetail detail, DateTime issuedAt)
     {
         // The community license only needs to be configured once per process. Setting it here
@@ -30,7 +37,7 @@ internal sealed class SupportRequestPdfGenerator : ISupportRequestPdfGenerator
             {
                 page.Size(PageSizes.A4);
                 page.Margin(40);
-                page.DefaultTextStyle(x => x.FontSize(11).FontFamily(Fonts.Calibri));
+                page.DefaultTextStyle(x => x.FontSize(11).FontFamily(ResolveFontFamily()));
 
                 page.Header().Element(BuildHeader);
                 page.Content().Element(content => BuildContent(content, detail, issuedAt));

@@ -29,15 +29,36 @@ var app = builder.Build();
 app.UseCors(ClientCorsExtensions.ClientPolicyName);
 app.UseExceptionHandling();
 
-if (app.Environment.IsDevelopment())
+var enableSwagger = app.Environment.IsDevelopment()
+    || app.Configuration.GetValue("Swagger:Enabled", false);
+var applyMigrations = app.Environment.IsDevelopment()
+    || app.Configuration.GetValue("Database:ApplyMigrationsOnStartup", false);
+
+if (enableSwagger)
 {
     app.UseSwaggerConfiguration();
+}
+
+if (applyMigrations)
+{
     await app.ApplyPendingMigrationsAsync();
 }
 
-app.UseHttpsRedirection();
+// Containers typically expose plain HTTP behind a reverse proxy; forcing HTTPS redirects
+// breaks health checks and browser calls on http://localhost:<port>.
+var disableHttpsRedirection = app.Configuration.GetValue("DisableHttpsRedirection", false);
+if (!disableHttpsRedirection)
+{
+    app.UseHttpsRedirection();
+}
+
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapGet("/health", () => Results.Ok(new { status = "Healthy" }))
+    .AllowAnonymous()
+    .WithTags("Health");
+
 app.MapControllers();
 
 app.Run();
