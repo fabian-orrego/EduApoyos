@@ -1,0 +1,183 @@
+<section class="app-detail-support-request">
+  @if (loading()) {
+    <div class="app-detail-support-request__loading">
+      <mat-progress-spinner mode="indeterminate" diameter="48" />
+    </div>
+  } @else if (detail(); as request) {
+    <mat-card appearance="outlined" class="app-detail-support-request__card">
+      <mat-card-header class="app-detail-support-request__header">
+        <div>
+          <mat-card-title>
+            Solicitud #{{ formatShortId(request.id) }}
+          </mat-card-title>
+          <mat-card-subtitle>
+            Registrada el
+            {{ request.requestedAt | date: "dd 'de' MMMM 'de' yyyy · HH:mm" }}
+          </mat-card-subtitle>
+        </div>
+
+        <div class="app-detail-support-request__header-actions">
+          <a mat-stroked-button routerLink="/solicitudes">
+            <mat-icon>arrow_back</mat-icon>
+            Volver
+          </a>
+
+          @if (canEdit()) {
+            <button mat-stroked-button type="button" (click)="openEdit()">
+              <mat-icon>edit</mat-icon>
+              Editar
+            </button>
+          }
+
+          @if (canChangeStatus()) {
+            <button
+              mat-flat-button
+              color="primary"
+              type="button"
+              (click)="openChangeStatus()"
+            >
+              <mat-icon>swap_horiz</mat-icon>
+              Cambiar estado
+            </button>
+          }
+
+          @if (isStudent()) {
+            <button
+              mat-flat-button
+              color="primary"
+              type="button"
+              (click)="downloadCertificate()"
+              [disabled]="downloading()"
+            >
+              <mat-icon>picture_as_pdf</mat-icon>
+              {{ downloading() ? 'Generando...' : 'Descargar constancia' }}
+            </button>
+          }
+        </div>
+      </mat-card-header>
+
+      <mat-card-content class="app-detail-support-request__content">
+        <div class="app-detail-support-request__grid">
+          <section>
+            <h3>Estudiante</h3>
+            <dl>
+              <div>
+                <dt>Nombre</dt>
+                <dd>{{ request.studentFullName }}</dd>
+              </div>
+              <div>
+                <dt>Correo</dt>
+                <dd>{{ request.studentEmail }}</dd>
+              </div>
+              <div>
+                <dt>Documento</dt>
+                <dd>{{ request.studentDocumentNumber }}</dd>
+              </div>
+              <div>
+                <dt>Programa</dt>
+                <dd>
+                  {{ request.studentAcademicProgram }} · Semestre
+                  {{ request.studentSemester }}
+                </dd>
+              </div>
+            </dl>
+          </section>
+
+          <section>
+            <h3>Solicitud</h3>
+            <dl>
+              <div>
+                <dt>Estado actual</dt>
+                <dd>
+                  <span class="status-chip status-chip--{{ request.status }}">
+                    {{ request.status | estado }}
+                  </span>
+                </dd>
+              </div>
+              <div>
+                <dt>Tipo de apoyo</dt>
+                <dd>{{ request.supportType | tipoApoyo }}</dd>
+              </div>
+              <div>
+                <dt>Monto solicitado</dt>
+                <dd>
+                  {{
+                    request.requestedAmount
+                      | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO'
+                  }}
+                </dd>
+              </div>
+              <div>
+                <dt>Última actualización</dt>
+                <dd>
+                  {{ request.updatedAt | date: "dd/MM/yyyy · HH:mm" }}
+                </dd>
+              </div>
+              <div>
+                <dt>Asesor asignado</dt>
+                <dd>{{ request.advisorFullName ?? 'Sin asignar' }}</dd>
+              </div>
+            </dl>
+          </section>
+        </div>
+
+        <mat-divider />
+
+        <section class="app-detail-support-request__description">
+          <h3>Descripción</h3>
+          <p>{{ request.description }}</p>
+        </section>
+
+        <mat-divider />
+
+        <section class="app-detail-support-request__history">
+          <h3>Historial de estados</h3>
+          @if (request.history.length === 0) {
+            <p class="app-detail-support-request__empty">
+              La solicitud aún no cuenta con registros de historial.
+            </p>
+          } @else {
+            <ol class="app-detail-support-request__timeline">
+              @for (entry of request.history; track entry.id) {
+                <li>
+                  <div class="app-detail-support-request__timeline-marker">
+                    <mat-icon>history</mat-icon>
+                  </div>
+                  <div class="app-detail-support-request__timeline-body">
+                    <p class="app-detail-support-request__timeline-title">
+                      <span class="status-chip status-chip--{{ entry.previousStatus }}">
+                        {{ entry.previousStatus | estado }}
+                      </span>
+                      <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+                      <span class="status-chip status-chip--{{ entry.newStatus }}">
+                        {{ entry.newStatus | estado }}
+                      </span>
+                    </p>
+                    <p class="app-detail-support-request__timeline-meta">
+                      {{ entry.changedAt | date: "dd/MM/yyyy · HH:mm" }} ·
+                      {{ entry.changedByFullName }}
+                    </p>
+                    @if (entry.notes) {
+                      <p class="app-detail-support-request__timeline-notes">
+                        {{ entry.notes }}
+                      </p>
+                    }
+                  </div>
+                </li>
+              }
+            </ol>
+          }
+        </section>
+      </mat-card-content>
+    </mat-card>
+  } @else {
+    <mat-card appearance="outlined" class="app-detail-support-request__card">
+      <mat-card-content>
+        <p>No se encontró la solicitud.</p>
+        <a mat-flat-button color="primary" routerLink="/solicitudes">
+          Volver al listado
+        </a>
+      </mat-card-content>
+    </mat-card>
+  }
+</section>

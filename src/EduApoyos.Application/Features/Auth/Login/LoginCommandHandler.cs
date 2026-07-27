@@ -51,6 +51,7 @@ public sealed class LoginCommandHandler
             accessToken.Token,
             accessToken.ExpiresAtUtc,
             user.FullName,
+            user.Email,
             (int)user.Role);
 
         return Result.Success(response);

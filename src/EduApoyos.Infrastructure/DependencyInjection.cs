@@ -1,6 +1,8 @@
+using EduApoyos.Application.Common.Documents;
 using EduApoyos.Application.Common.Identity;
 using EduApoyos.Application.Common.Persistence;
 using EduApoyos.Infrastructure.Authentication;
+using EduApoyos.Infrastructure.Documents;
 using EduApoyos.Infrastructure.Identity;
 using EduApoyos.Infrastructure.Persistence;
 using EduApoyos.Infrastructure.Persistence.Interceptors;
@@ -57,6 +59,8 @@ public static class DependencyInjection
 
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<IStudentRepository, StudentRepository>();
+        services.AddScoped<ISupportRequestRepository, SupportRequestRepository>();
+        services.AddSingleton<ISupportRequestPdfGenerator, SupportRequestPdfGenerator>();
 
         services
             .AddOptions<JwtSettings>()
