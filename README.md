@@ -16,6 +16,8 @@ Stack principal: **.NET 8**, **Angular 20**, **SQL Server**, **Docker Compose**.
 | [Local development](docs/LocalDevelopment.md) | Arranque de API/UI en local (hot-reload) |
 | [Demo data](docs/DemoData.md) | Usuarios, contraseñas y datos de prueba |
 | [Database](docs/Database.md) | EF Core, migraciones, scripts SQL e índices |
+| [Azure deployment proposal](docs/AzureDeploymentProposal.md) | Propuesta de despliegue productivo en Azure (App Service, SQL, Key Vault, etc.) |
+| [CI pipeline (backend)](.github/workflows/ci.yml) | GitHub Actions: restore, build Release, tests y publish de la API (verificado en ejecución) |
 
 ---
 

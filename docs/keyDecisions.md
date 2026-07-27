@@ -320,3 +320,17 @@ La cobertura mínima será superior al 70% en la capa Application.
 Es la capa donde reside la lógica de negocio.
 
 No se realizarán pruebas unitarias sobre Entity Framework ni ASP.NET Core Identity.
+
+---
+
+## 15. Pipeline CI del backend (GitHub Actions)
+
+Se implementó un pipeline de integración continua para el backend en [`.github/workflows/ci.yml`](../.github/workflows/ci.yml). El flujo restaura dependencias, compila en Release, ejecuta las pruebas unitarias y publica el artefacto de la API. El pipeline se ejecuta correctamente en GitHub Actions.
+
+### Justificación
+
+El repositorio está en GitHub, por lo que Actions es la opción natural sin infraestructura adicional.
+
+Garantiza que cada cambio en `main`/`develop` (y en PRs) valide el backend de forma automática.
+
+Deja listo el artefacto publicado para un posible despliegue posterior (ver [propuesta Azure](AzureDeploymentProposal.md)).
