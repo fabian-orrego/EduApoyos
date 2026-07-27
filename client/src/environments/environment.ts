@@ -1,5 +1,7 @@
 export const environment = {
   production: false,
-  apiBaseUrl: 'https://localhost:7260/api',
+  // Relative URL so ng serve proxies to the API (proxy.conf.json) and avoids cross-origin
+  // calls during local development.
+  apiBaseUrl: '/api',
   appName: 'EduApoyos',
 };
