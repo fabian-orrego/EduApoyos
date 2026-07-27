@@ -1,0 +1,27 @@
+<h2 mat-dialog-title class="app-confirm-dialog__title">
+  @if (confirmColor === 'warn') {
+    <mat-icon color="warn" aria-hidden="true">warning</mat-icon>
+  } @else {
+    <mat-icon color="primary" aria-hidden="true">help_outline</mat-icon>
+  }
+  <span>{{ title }}</span>
+</h2>
+
+<mat-dialog-content>
+  <p class="app-confirm-dialog__message">{{ data.message }}</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button type="button" (click)="cancel()">
+    {{ cancelLabel }}
+  </button>
+  <button
+    mat-flat-button
+    type="button"
+    [color]="confirmColor"
+    (click)="confirm()"
+    cdkFocusInitial
+  >
+    {{ confirmLabel }}
+  </button>
+</mat-dialog-actions>
