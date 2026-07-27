@@ -53,6 +53,31 @@ export const routes: Routes = [
             './features/students/create-student/create-student.component'
           ).then((m) => m.CreateStudentComponent),
       },
+      {
+        path: 'solicitudes',
+        pathMatch: 'full',
+        canActivate: [roleGuard([UserRoleId.Advisor, UserRoleId.Student])],
+        loadComponent: () =>
+          import(
+            './features/support-requests/list-support-requests/list-support-requests.component'
+          ).then((m) => m.ListSupportRequestsComponent),
+      },
+      {
+        path: 'solicitudes/nueva',
+        canActivate: [roleGuard([UserRoleId.Advisor, UserRoleId.Student])],
+        loadComponent: () =>
+          import(
+            './features/support-requests/create-support-request/create-support-request.component'
+          ).then((m) => m.CreateSupportRequestComponent),
+      },
+      {
+        path: 'solicitudes/:id',
+        canActivate: [roleGuard([UserRoleId.Advisor, UserRoleId.Student])],
+        loadComponent: () =>
+          import(
+            './features/support-requests/detail-support-request/detail-support-request.component'
+          ).then((m) => m.DetailSupportRequestComponent),
+      },
     ],
   },
   {

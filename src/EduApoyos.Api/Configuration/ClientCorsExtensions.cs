@@ -29,7 +29,8 @@ internal static class ClientCorsExtensions
             options.AddPolicy(ClientPolicyName, policy => policy
                 .WithOrigins(allowedOrigins)
                 .AllowAnyHeader()
-                .AllowAnyMethod());
+                .AllowAnyMethod()
+                .WithExposedHeaders("Content-Disposition"));
         });
 
         return services;
