@@ -15,7 +15,7 @@ Stack principal: **.NET 8**, **Angular 20**, **SQL Server**, **Docker Compose**.
 | [Future improvements](docs/FutureImprovements.md) | Mejoras posibles para una siguiente versión |
 | [Local development](docs/LocalDevelopment.md) | Arranque de API/UI en local (hot-reload) |
 | [Demo data](docs/DemoData.md) | Usuarios, contraseñas y datos de prueba |
-| [Database](docs/Database.md) | EF Core, migraciones y reglas de persistencia |
+| [Database](docs/Database.md) | EF Core, migraciones, scripts SQL e índices |
 
 ---
 
