@@ -1,0 +1,74 @@
+# CI Pipeline — EduApoyos (.NET 8)
+# Restaura, compila (Release), prueba y publica el artefacto de la API.
+
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+env:
+  DOTNET_VERSION: "8.0.x"
+  SOLUTION: EduApoyos.sln
+  API_PROJECT: src/EduApoyos.Api/EduApoyos.Api.csproj
+  PUBLISH_DIR: publish/api
+  CONFIGURATION: Release
+
+jobs:
+  build-test-publish:
+    name: Build, Test & Publish
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      # 1. Restaurar dependencias
+      - name: Restore dependencies
+        run: dotnet restore ${{ env.SOLUTION }}
+
+      # 2. Compilar en modo Release
+      - name: Build (Release)
+        run: >
+          dotnet build ${{ env.SOLUTION }}
+          --configuration ${{ env.CONFIGURATION }}
+          --no-restore
+
+      # 3. Ejecutar pruebas unitarias
+      - name: Run unit tests
+        run: >
+          dotnet test ${{ env.SOLUTION }}
+          --configuration ${{ env.CONFIGURATION }}
+          --no-build
+          --verbosity normal
+          --logger "trx;LogFileName=test-results.trx"
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: "**/TestResults/**/*.trx"
+          if-no-files-found: ignore
+
+      # 4. Publicar artefacto de la API
+      - name: Publish API
+        run: >
+          dotnet publish ${{ env.API_PROJECT }}
+          --configuration ${{ env.CONFIGURATION }}
+          --no-build
+          --output ${{ env.PUBLISH_DIR }}
+
+      - name: Upload API artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: eduapoyos-api
+          path: ${{ env.PUBLISH_DIR }}
+          if-no-files-found: error
