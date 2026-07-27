@@ -29,7 +29,13 @@ Con Docker Desktop puedes levantar **SQL Server + API + UI** con un solo comando
 
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/) (Compose v2)
 
-### 1. Variables de entorno
+### 1. Abrir una terminal en la raíz del repositorio
+
+Abre una terminal y navega hasta la raíz del proyecto EduApoyos, donde está el archivo `docker-compose.yml`:
+
+Los comandos siguientes asumen que trabajas desde ese directorio.
+
+### 2. Variables de entorno
 
 ```bash
 cp .env.example .env
@@ -37,7 +43,7 @@ cp .env.example .env
 
 El archivo `.env` **no se commitea**. Contiene la contraseña de SQL Server, la clave JWT y los puertos publicados.
 
-### 2. Levantar todo
+### 3. Levantar todo
 
 ```bash
 docker compose up --build
@@ -62,7 +68,7 @@ La primera vez construye las imágenes (puede tardar varios minutos). Cuando API
 
 La UI sirve el build de producción y nginx reenvía `/api/*` al contenedor de la API. Al arrancar, la API aplica las migraciones EF Core y carga los [datos de prueba](docs/DemoData.md).
 
-### 3. Detener
+### 4. Detener
 
 ```bash
 docker compose down
