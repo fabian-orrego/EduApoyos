@@ -1,0 +1,28 @@
+.app-create-support-request {
+  display: flex;
+  justify-content: center;
+  padding: 24px;
+
+  &__card {
+    width: 100%;
+    max-width: 640px;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-top: 12px;
+
+    mat-form-field {
+      display: block;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 8px;
+  }
+}

@@ -48,6 +48,7 @@ export class AuthService {
   private storeSession(response: LoginResponse): void {
     const user: CurrentUser = {
       fullName: response.fullName,
+      email: response.email,
       roleId: response.roleId,
       expiresAt: response.expiresAt,
     };
@@ -69,7 +70,52 @@ export class AuthService {
   private readUser(): CurrentUser | null {
     try {
       const raw = localStorage.getItem(STORAGE_KEYS.currentUser);
-      return raw ? (JSON.parse(raw) as CurrentUser) : null;
+      if (!raw) {
+        return null;
+      }
+
+      const parsed = JSON.parse(raw) as CurrentUser;
+      // Older sessions may lack email; recover it from the JWT email claim when possible.
+      if (!parsed.email) {
+        const emailFromToken = this.readEmailFromToken();
+        if (emailFromToken) {
+          parsed.email = emailFromToken;
+          localStorage.setItem(STORAGE_KEYS.currentUser, JSON.stringify(parsed));
+        }
+      }
+
+      return parsed;
+    } catch {
+      return null;
+    }
+  }
+
+  private readEmailFromToken(): string | null {
+    const token = this.readAccessToken();
+    if (!token) {
+      return null;
+    }
+
+    try {
+      const payload = token.split('.')[1];
+      if (!payload) {
+        return null;
+      }
+
+      const normalized = payload.replace(/-/g, '+').replace(/_/g, '/');
+      const json = atob(normalized);
+      const claims = JSON.parse(json) as Record<string, unknown>;
+      const email =
+        (typeof claims['email'] === 'string' && claims['email']) ||
+        (typeof claims[
+          'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'
+        ] === 'string' &&
+          (claims[
+            'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'
+          ] as string)) ||
+        null;
+
+      return email;
     } catch {
       return null;
     }

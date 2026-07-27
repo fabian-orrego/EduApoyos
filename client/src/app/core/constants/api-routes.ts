@@ -12,7 +12,9 @@ export const API_ROUTES = {
     byId: (id: string | number) => `${base}/estudiantes/${id}`,
   },
   supportRequests: {
-    root: `${base}/support-requests`,
-    byId: (id: string | number) => `${base}/support-requests/${id}`,
+    root: `${base}/solicitudes`,
+    byId: (id: string | number) => `${base}/solicitudes/${id}`,
+    status: (id: string | number) => `${base}/solicitudes/${id}/estado`,
+    certificate: (id: string | number) => `${base}/solicitudes/${id}/constancia`,
   },
 } as const;

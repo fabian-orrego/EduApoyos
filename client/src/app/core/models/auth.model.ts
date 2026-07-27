@@ -40,11 +40,13 @@ export interface LoginResponse {
   token: string;
   expiresAt: string;
   fullName: string;
+  email: string;
   roleId: UserRoleIdValue;
 }
 
 export interface CurrentUser {
   fullName: string;
+  email: string;
   roleId: UserRoleIdValue;
   expiresAt: string;
 }
