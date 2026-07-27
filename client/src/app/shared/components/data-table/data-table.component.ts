@@ -20,6 +20,7 @@ export class DataTableComponent<T> {
   readonly pageSize = input<number>(10);
   readonly pageSizeOptions = input<number[]>([5, 10, 25, 50]);
   readonly showPaginator = input<boolean>(true);
+  readonly emptyMessage = input<string>('No hay registros disponibles.');
 
   readonly pageChange = output<DataTablePageEvent>();
 

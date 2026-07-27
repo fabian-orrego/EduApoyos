@@ -1,0 +1,30 @@
+.app-list-students {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  gap: 16px;
+
+  &__card {
+    width: 100%;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 8px;
+
+    a[mat-flat-button] {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+  }
+
+  &__actions {
+    display: inline-flex;
+    justify-content: flex-end;
+    gap: 4px;
+  }
+}

@@ -14,7 +14,13 @@
           *matCellDef="let row"
           [style.text-align]="column.align ?? 'start'"
         >
-          {{ column.value(row) }}
+          @if (column.cellTemplate) {
+            <ng-container
+              *ngTemplateOutlet="column.cellTemplate; context: { $implicit: row }"
+            />
+          } @else {
+            {{ column.value(row) }}
+          }
         </td>
       </ng-container>
     }
@@ -24,7 +30,7 @@
 
     <tr class="mat-row app-empty-row" *matNoDataRow>
       <td class="mat-cell" [attr.colspan]="displayedColumns().length">
-        No records found.
+        {{ emptyMessage() }}
       </td>
     </tr>
   </table>
